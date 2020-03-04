@@ -13,8 +13,8 @@ impl EmployeeDatabaseCommand {
         match command_parts.as_slice() {
             ["All"] => Some(EmployeeDatabaseCommand::All),
             ["Add", name, "to", department] => Some(EmployeeDatabaseCommand::Add {
-                name: name.to_string(),
-                department: department.to_string(),
+                name: (*name).to_string(),
+                department: (*department).to_string(),
             }),
             ["Help"] => Some(EmployeeDatabaseCommand::Help),
             _ => None,
@@ -52,10 +52,7 @@ fn main() {
                 }
             }
             Some(EmployeeDatabaseCommand::Add { name, department }) => {
-                departments
-                    .entry(department)
-                    .or_insert(Vec::default())
-                    .push(name);
+                departments.entry(department).or_default().push(name);
             }
             Some(EmployeeDatabaseCommand::Help) => print_command_menu(),
             None => println!("Invalid command!"),
